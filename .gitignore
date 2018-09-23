@@ -1,0 +1,14 @@
+# Extras folder
+extra/*
+
+# VS Code folder
+.vscode/*
+
+# Object files
+*.o
+
+# Binary files
+*.bin
+
+# ELF files
+*.elf
