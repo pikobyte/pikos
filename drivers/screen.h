@@ -19,8 +19,8 @@
 
 /* Video memory and screen buffer constants */
 #define VIDEO_ADDRESS 0xb8000
-#define MAX_ROWS 25
-#define MAX_COLS 80
+#define MAX_X 80
+#define MAX_Y 25
 #define WHITE_ON_BLACK 0x0f
 
 /* Screen device I/O ports */
@@ -37,11 +37,11 @@ void clear_screen();
 /**
  * \brief Prints a string to a location on screen.
  * \param [in] str The string to be printed.
- * \param [in] col The x-position of the string.
- * \param [in] row The y-position of the string.
+ * \param [in] x The x-position of the string.
+ * \param [in] y The y-position of the string.
  * \returns None.
  */
-void print_at(const char *str, int32 col, int32 row);
+void print_at(const char *str, int32 x, int32 y);
 
 /**
  * \brief Prints a string at the cursor location.
