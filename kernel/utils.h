@@ -10,7 +10,7 @@
 #ifndef UTILS_H
 #define UTILS_H
 
-#include "definitions.h"
+#include "../common/definitions.h"
 
 void mem_copy(const char *source, char *dest, const uint32 nbytes);
 

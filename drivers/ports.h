@@ -10,7 +10,7 @@
 #ifndef PORTS_H
 #define PORTS_H
 
-#include "definitions.h"
+#include "../common/definitions.h"
 
 uint8 port_byte_in(const uint16 port);
 void port_byte_out(const uint16 port, const uint8 data);

@@ -7,9 +7,9 @@
  *
  * ========================================================================== */
 
-#include "definitions.h"
-#include "screen.h"
-#include "utils.h"
+#include "../common/definitions.h"
+#include "../drivers/screen.h"
+#include "../kernel/utils.h"
 
 void main() {
   clear_screen();

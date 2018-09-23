@@ -8,10 +8,11 @@
 
 CC = gcc
 GDB = gdb
-CFLAGS = -m32 -g -nostdinc -I ./include -O0 -Wall -Wpedantic -Werror -ansi
+CFLAGS = -m32 -g -nostdlib -nostdinc -I ./include -O0 -Wall -Wpedantic -Werror \
+		 -ansi
 
-C_SOURCES = $(wildcard src/*.c)
-HEADERS = $(wildcard include/*.h)
+C_SOURCES = $(wildcard kernel/*.c drivers/*.c cpu/*.c)
+HEADERS = $(wildcard common/*.h kernel/*.h drivers/*.h cpu/*.h)
 OBJ = ${C_SOURCES:.c=.o}
 
 pikos.bin: boot/pikos_bootsect.bin kernel.bin
@@ -41,6 +42,6 @@ debug: pikos.bin kernel.elf
 
 clean:
 	rm -rf *.bin *.dis *.o pikos.bin *.elf
-	rm -rf boot/*.bin src/*.o boot/*.o include/*.o
+	rm -rf boot/*.bin boot/*.o kernel/*.o drivers/*.o cpu/*.o
 
 .PHONY: clean
