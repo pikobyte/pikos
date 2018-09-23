@@ -14,15 +14,15 @@
  * 
  */
 
-#include "../common/definitions.h"
 #include "../drivers/screen.h"
-#include "../kernel/utils.h"
+#include "../cpu/isr.h"
 
 /**
  *
  * \brief The main entry point for the kernel.
  *
- * Currently clears the screen and prints the operating system name.
+ * Currently clears the screen, prints the operating system name. and sets up
+ * interrupt handling. 
  *
  * \param None.
  * \return None.
@@ -30,4 +30,5 @@
 void main() {
   clear_screen();
   print("PikOS");
+  isr_install();
 }

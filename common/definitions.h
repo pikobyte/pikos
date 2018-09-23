@@ -8,8 +8,8 @@
  *
  * The fundamental integer types are redefined here for brevity. They include
  * signed and unsigned integers from 8-bits to 32-bits. This file also defines
- * common constants that are used throughout the operating system.
- * 
+ * common constants and macros that are used throughout the operating system.
+ *
  * \author Anthony Mercer
  *
  */
@@ -23,5 +23,8 @@ typedef unsigned short uint16;
 typedef signed short int16;
 typedef unsigned int uint32;
 typedef signed int int32;
+
+#define low16(addr) (uint16)((addr)&0xFFFF)
+#define high16(addr) (uint16)(((addr) >> 16) & 0xFFFF)
 
 #endif

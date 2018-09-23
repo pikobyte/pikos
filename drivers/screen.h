@@ -14,8 +14,8 @@
 #define SCREEN_H
 
 #include "../common/definitions.h"
+#include "../common/utils.h"
 #include "../drivers/ports.h"
-#include "../kernel/utils.h"
 
 /* Video memory and screen buffer constants */
 #define VIDEO_ADDRESS 0xb8000
