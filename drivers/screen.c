@@ -1,11 +1,14 @@
 /* =============================================================================
  *   PikOS
- *
- *   screen.c
- *
- *   Basic functionality for VGA.
- *
  * ========================================================================== */
+
+/**
+ * \file screen.c
+ * \brief Screen function implementation.
+ *
+ * \author Anthony Mercer
+ *
+ */
 
 #include "screen.h"
 
@@ -26,10 +29,11 @@ static int32 handle_scrolling(int32 offset);
  * ---------------------------------------------------------------------------*/
 
 /**
- * Print a message on the specified location
- * If col, row, are negative, we will use the current offset.
+ * \desc Prints a string at a given location on the screen. If both of the
+ * positions are negative, then the string is written to the cursor position.
+ * Single character printing is relegated to the print_char() function.
  */
-void print_at(const char *msg, int32 col, int32 row) {
+void print_at(const char *str, int32 col, int32 row) {
   int32 i = 0;
   int32 offset = 0;
 
@@ -42,17 +46,23 @@ void print_at(const char *msg, int32 col, int32 row) {
     col = get_offset_col(offset);
   }
 
-  while (msg[i] != 0) {
-    offset = print_char(msg[i++], col, row, WHITE_ON_BLACK);
+  while (str[i] != 0) {
+    offset = print_char(str[i++], col, row, WHITE_ON_BLACK);
     row = get_offset_row(offset);
     col = get_offset_col(offset);
   }
 }
 
-void print(const char *msg) { print_at(msg, 0, 0); }
+/**
+ * \desc Prints a given string at the cursor location. This function is a
+ * wrapper to the print_at() function, passing in a negative position.
+*/
+void print(const char *str) { print_at(str, -1, -1); }
 
-/* Clears the screen with space characters and sets the cursor to the top left.
- */
+/**
+ * \desc Clears the screen by looping over the screen buffer and replacing all
+ * characters with a space.
+*/
 void clear_screen() {
   int32 i = 0;
 
@@ -68,35 +78,44 @@ void clear_screen() {
  * PRIVATE STATIC FUNCTIONS
  * ---------------------------------------------------------------------------*/
 
-/* Print a character at col, row or cursor position. */
+/**
+ * \brief Prints a single character to the screen at some location
+ * 
+ * \desc A provided character is printed to the screen at the given position
+ * provided this position lies within the screen buffer, defined by MAX_COLS
+ * and MAX_ROWS. If the position is negative, the character is printed at
+ * the cursor position. A newline character increments the row. If the
+ * character is not an escape sequence, the video memory/cursor position
+ * offset is increased. Scrolling of the screen is handled through the
+ * handle_scrolling() function.
+ * 
+ * \param [in] character The character to be printed.
+ * \param [in] col The x-position of the character.
+ * \param [in] row The y-position of the character.
+ * \param [in] attr The color attribute of the character, default to black
+ * on white.
+ * 
+ * \returns Position of the cursor/position in video memory.
+ */
 static int32 print_char(const uint8 character, const int32 col, int32 row,
                         uint8 attr) {
   int32 offset = 0;
-
-  /* Ptr to video memory */
   uint8 *vid_mem = (uint8 *)VIDEO_ADDRESS;
 
-  /* If attr = 0, assume B&W */
   if (!attr) {
     attr = WHITE_ON_BLACK;
   }
 
-  /* If row or col are out of bounds then return */
   if (col >= MAX_COLS || row >= MAX_ROWS) {
     return get_screen_offset(col, row);
   }
 
-  /* If a row and col are > 0, that is our offset, otherwise use the cursor
-   * position */
   if (col >= 0 && row >= 0) {
     offset = get_screen_offset(col, row);
   } else {
     offset = get_cursor_offset();
   }
 
-  /* If the input character is a newline, set the offset to the end of the row.
-   * Then the next character will be on the next column down. Otherwise write
-   * into video memory at the offset and set the attrib byte too. */
   if (character == '\n') {
     row = get_offset_row(offset);
     offset = get_screen_offset(0, row + 1);
@@ -106,30 +125,64 @@ static int32 print_char(const uint8 character, const int32 col, int32 row,
     offset += 2;
   }
 
-  /* Scrolling screen adjustment */
+  /* TODO: Handle tab character. */
+
   offset = handle_scrolling(offset);
 
-  /* Update the cursor position and return it */
   set_cursor_offset(offset);
   return offset;
 }
 
+/**
+ * \brief Gets the current position in video memory.
+ * 
+ * \desc Given a position on the screen, this function returns the number of
+ * bytes into the video memory. The multiplication by 2 exists as characters are
+ * 2 bytes long.
+ * 
+ * \param [in] col The desired x-position.
+ * \param [in] row The desired y-position
+ * 
+ * \returns The corresponding position in video memory.
+ */
 static int32 get_screen_offset(const int32 col, const int32 row) {
   return 2 * (row * MAX_COLS + col);
 }
 
+/**
+ * \brief Gets the screen row from a given position in video memory.
+ *
+ * \param [in] offset The current position in video memory.
+ *
+ * \returns The corresponding screen row.
+ */
 static int32 get_offset_row(const int32 offset) {
   return offset / (2 * MAX_COLS);
 }
 
+/**
+ * \brief Gets the screen column from a given position in video memory.
+ *
+ * \param [in] offset The current position in video memory.
+ *
+ * \returns The corresponding screen column.
+ */
 static int32 get_offset_col(const int32 offset) {
   return (offset - (get_offset_row(offset) * 2 * MAX_COLS)) / 2;
 }
 
-/* Gets the cursor position using the VGA port. We ask for the high byte of the
- * cursor offset with 14 and the low byte with 15. We shift the high byte to the
- * left 8 times and add on the low byte. We then return this offset multiplied
- * by two as this is the size of a character. */
+/**
+ * \brief Gets the cursor position via the video port.
+ * 
+ * \desc The current position of the cursor can be retrieved through querying
+ * the video port. The data 14 and 15 access the low and high 8-bits of the
+ * position respectively, which is consequently read in. The two bytes are 
+ * concatenated into a single int and returned in character units.
+ * 
+ * \param None.
+ * 
+ * \returns The current cursor position.
+ */
 static int32 get_cursor_offset() {
   int32 offset = 0;
 
@@ -141,8 +194,18 @@ static int32 get_cursor_offset() {
   return offset * 2;
 }
 
-/* Similar to get cursor, but we are reading out the data to the ports instead.
- * The offset and bit manipulation is reversed. */
+/**
+ * \brief Sets the cursor position via the video port.
+ *
+ * \desc The current position of the cursor can be set through querying
+ * the video port. The data 14 and 15 accesses the low and high 8-bits of the
+ * position respectively. This function sends out the current position of the
+ * cursor in, splitting into low and high bytes respectively.
+ *
+ * \param [in] offset The current cursor position.
+ *
+ * \returns None.
+ */
 static void set_cursor_offset(int32 offset) {
   offset /= 2;
   port_byte_out(REG_SCREEN_CTRL, 14);
@@ -151,29 +214,37 @@ static void set_cursor_offset(int32 offset) {
   port_byte_out(REG_SCREEN_DATA, (uint8)(offset & 0xff));
 }
 
-/* Scroll the screen down if necessary. */
+/**
+ * \brief Scrolls the screen if required.
+ * 
+ * \desc The function checks if the current position is within the screen, and
+ * returns it if it is. If not, each row is moved backward using mem_copy() and
+ * utilising the fact that we know where the video memory is and how far into
+ * it we are. The last line is removed and the cursor position is set back a 
+ * row and is returned.
+ *
+ * \param [in] offset The current position in video memory.
+ *
+ * \returns The new position in video memory.
+ */
 static int32 handle_scrolling(int32 offset) {
   int32 i = 0;
   char *last_line = (char *)get_screen_offset(0, MAX_ROWS - 1) + VIDEO_ADDRESS;
 
-  /* Return if the cursor is within the screen */
   if (offset < MAX_ROWS * MAX_COLS * 2) {
     return offset;
   }
 
-  /* Shuffle back the rows */
   for (i = 1; i < MAX_ROWS; ++i) {
     mem_copy((char *)(get_screen_offset(0, i)) + VIDEO_ADDRESS,
              (char *)(get_screen_offset(0, i - 1)) + VIDEO_ADDRESS,
              MAX_COLS * 2);
   }
 
-  /* Remove the last line */
   for (i = 0; i < MAX_COLS * 2; ++i) {
     last_line[i] = 0;
   }
 
-  /* Move the cursor back a row and return it */
   offset -= 2 * MAX_COLS;
   return offset;
 }

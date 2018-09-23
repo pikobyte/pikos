@@ -1,11 +1,14 @@
 /* =============================================================================
  *   PikOS
- *
- *   screen.h
- *
- *   Basic functionality for VGA.
- *
  * ========================================================================== */
+
+/**
+ * \file screen.h
+ * \brief Screen function implementation.
+ *
+ * \author Anthony Mercer
+ *
+ */
 
 #ifndef SCREEN_H
 #define SCREEN_H
@@ -14,6 +17,7 @@
 #include "../drivers/ports.h"
 #include "../kernel/utils.h"
 
+/* Video memory and screen buffer constants */
 #define VIDEO_ADDRESS 0xb8000
 #define MAX_ROWS 25
 #define MAX_COLS 80
@@ -23,8 +27,27 @@
 #define REG_SCREEN_CTRL 0x3d4
 #define REG_SCREEN_DATA 0x3d5
 
+/**
+ * \brief Clears the screen.
+ * \param None.
+ * \returns N/A.
+ */
 void clear_screen();
-void print_at(const char *msg, int32 col, int32 row);
-void print(const char *msg);
+
+/**
+ * \brief Prints a string to a location on screen.
+ * \param [in] str The string to be printed.
+ * \param [in] col The x-position of the string.
+ * \param [in] row The y-position of the string.
+ * \returns N/A.
+ */
+void print_at(const char *str, int32 col, int32 row);
+
+/**
+ * \brief Prints a string at the cursor location.
+ * \param [in] str The string to be printed.
+ * \returns N/A.
+ */
+void print(const char *str);
 
 #endif

@@ -12,3 +12,6 @@ extra/*
 
 # ELF files
 *.elf
+
+# Doxygen generated files
+docs/html

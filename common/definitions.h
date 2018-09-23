@@ -1,11 +1,18 @@
 /* =============================================================================
  *   PikOS
- *
- *   definitions.h
- *
- *   Simplified typedefs and common constants.
- *
  * ========================================================================== */
+
+/**
+ * \file definitions.h
+ * \brief Typedefs and common constants.
+ *
+ * The fundamental integer types are redefined here for brevity. They include
+ * signed and unsigned integers from 8-bits to 32-bits. This file also defines
+ * common constants that are used throughout the operating system.
+ * 
+ * \author Anthony Mercer
+ *
+ */
 
 #ifndef DEFINITIONS_H
 #define DEFINITIONS_H
