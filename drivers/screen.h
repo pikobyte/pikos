@@ -30,7 +30,7 @@
 /**
  * \brief Clears the screen.
  * \param None.
- * \returns N/A.
+ * \returns None.
  */
 void clear_screen();
 
@@ -39,14 +39,14 @@ void clear_screen();
  * \param [in] str The string to be printed.
  * \param [in] col The x-position of the string.
  * \param [in] row The y-position of the string.
- * \returns N/A.
+ * \returns None.
  */
 void print_at(const char *str, int32 col, int32 row);
 
 /**
  * \brief Prints a string at the cursor location.
  * \param [in] str The string to be printed.
- * \returns N/A.
+ * \returns None.
  */
 void print(const char *str);
 

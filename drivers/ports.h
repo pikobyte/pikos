@@ -29,7 +29,7 @@ uint8 port_byte_in(const uint16 port);
  * \brief Writes a byte to a given port.
  * \param [in] port The port to write a byte to.
  * \param [in] data The data to be written to the port.
- * \returns N/A.
+ * \returns None.
  */
 void port_byte_out(const uint16 port, const uint8 data);
 
@@ -44,7 +44,7 @@ uint16 port_word_in(const uint16 port);
  * \brief Writes a word to a given port.
  * \param [in] port The port to write a word to.
  * \param [in] data The data to be written to the port.
- * \returns N/A.
+ * \returns None.
  */
 void port_word_out(const uint16 port, const uint16 data);
 

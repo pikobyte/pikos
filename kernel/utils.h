@@ -23,7 +23,7 @@
  * \param [in] source The start of the address to be copied.
  * \param [in] dest The destination for the copied bytes.
  * \param [in] nbytes The number of bytes to be copied.
- * \returns N/A.
+ * \returns None.
  */
 void mem_copy(const char *source, char *dest, const uint32 nbytes);
 
