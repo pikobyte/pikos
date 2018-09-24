@@ -25,8 +25,10 @@
 
 #include "../common/definitions.h"
 #include "../common/utils.h"
+#include "../drivers/keyboard.h"
 #include "../drivers/screen.h"
 #include "idt.h"
+#include "timer.h"
 
 /* Interrupt service routine definitions (implemented in interrupt.asm) */
 extern void isr0();
@@ -117,7 +119,7 @@ typedef void (*ISR)(Registers);
  * \param None.
  * \returns None.
  */
-void interrupt_install(void);
+void isr_install(void);
 
 /**
  * \brief Handles a given interrupt.
@@ -125,6 +127,12 @@ void interrupt_install(void);
  * \returns None.
  */
 void isr_handler(const Registers regs);
+
+/** \brief Enables interuptions and sets them up.
+ * \param None.
+ * \returns None.
+ */
+void irq_install(void);
 
 /**
  * \brief Handles a given interrupt request.

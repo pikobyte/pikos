@@ -57,7 +57,7 @@ char *exception_msgs[] = {"Division By Zero ",
  * interrupt.asm routine. Then remap the programmable interrupt controller and
  * set the interrupt request. Finally, load the table.
  */
-void interrupt_install(void) {
+void isr_install(void) {
   /* Install the interrupt service routines */
   set_idt_gate(0, (uint32)isr0);
   set_idt_gate(1, (uint32)isr1);
@@ -137,6 +137,16 @@ void isr_handler(const Registers regs) {
   print("\n");
   print(exception_msgs[regs.int_no]);
   print("\n");
+}
+
+/**
+ * \desc Interrupts are enabled via assembly by setting the interrupt flag. Then
+ * the timer interrupt (IRQ0) and the keyboard (IRQ1) are initialised.
+ */
+void irq_install(void) {
+  __asm__ __volatile__("sti");
+  init_timer(50);
+  init_keyboard();
 }
 
 /**
