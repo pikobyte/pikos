@@ -19,11 +19,11 @@
  * kernel.
  */
 void set_idt_gate(const uint32 n, const uint32 loc) {
-  idt[n].low_offset = low16(loc);
+  idt[n].low_offset = lo16(loc);
   idt[n].selector = KERNEL_CS;
   idt[n].zero = 0;
   idt[n].flags = 0x8E; /* 0b10001110 */
-  idt[n].high_offset = high16(loc);
+  idt[n].high_offset = hi16(loc);
 }
 
 /**

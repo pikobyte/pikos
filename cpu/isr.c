@@ -146,7 +146,8 @@ void isr_handler(const Registers regs) {
  * however, we must send an end of interrupt signal to the programmable
  * interrupt controller, otherwise it will still think we are still within an
  * interrupt and will not send anymore. If the request is >= 40 (>= the 8th
- * absolute IRQ) then we must also inform the slave portion of the PIC (0x0A).
+ * absolute IRQ) then we must also inform the secondary slave PIC (I/O port
+ * 0x0A).
  */
 void irq_handler(const Registers regs) {
   if (regs.int_no >= 40) {

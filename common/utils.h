@@ -18,6 +18,9 @@
 
 #include "definitions.h"
 
+/* Used to avoid unused parameter compiler warning */
+#define UNUSED(x) (void)(x)
+
 /* =============================================================================
  * MEMORY FUNCTIONS
  * ========================================================================== */

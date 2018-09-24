@@ -24,7 +24,9 @@ typedef signed short int16;
 typedef unsigned int uint32;
 typedef signed int int32;
 
-#define low16(addr) (uint16)((addr)&0xFFFF)
-#define high16(addr) (uint16)(((addr) >> 16) & 0xFFFF)
+#define lo8(addr) (uint8)((addr)&0xFF)
+#define hi8(addr) (uint8)(((addr) >> 8) & 0xFF)
+#define lo16(addr) (uint16)((addr)&0xFFFF)
+#define hi16(addr) (uint16)(((addr) >> 16) & 0xFFFF)
 
 #endif

@@ -8,13 +8,13 @@
  *
  * The interrupt services routines are run whenever the CPU encounters an
  * interrupt. Defined here are a list of 32 interrupts which will be linked to
- * the ISR via interrupt.asm. They are declared external such that they can
- * be accessed. As the interrupt requests (IRQs) are mapped to the range
+ * the ISR via interrupt.asm. They are declared external such that they can be
+ * accessed. As the interrupt requests (IRQs) are mapped to the range
  * overlapping the ISRs, we will remap them to 32-47. The programmable interrupt
- * controller (PIC) can be accessed via ports with commands 0x20 and 0x21
- * (master) as well as 0xA0 and 0xA1 (slave). When an interrupt request is
+ * controller (PIC) can be accessed via I/0 0x20 and 0x21 (primary master) as
+ * well as 0xA0 and 0xA1 (secondary slave). When an interrupt request is
  * handled, the PIC is notified such that it can continue to handle further
- * interrupts.
+ * interrupts. 0x20 and 0xA0 are command, 0x21 and 0xA1 are data.
  *
  * \author Anthony Mercer
  *
