@@ -30,5 +30,5 @@
 void main() {
   clear_screen();
   print("PikOS");
-  isr_install();
+  interrupt_install();
 }

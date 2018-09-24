@@ -9,7 +9,12 @@
  * The interrupt services routines are run whenever the CPU encounters an
  * interrupt. Defined here are a list of 32 interrupts which will be linked to
  * the ISR via interrupt.asm. They are declared external such that they can
- * be accessed.
+ * be accessed. As the interrupt requests (IRQs) are mapped to the range
+ * overlapping the ISRs, we will remap them to 32-47. The programmable interrupt
+ * controller (PIC) can be accessed via ports with commands 0x20 and 0x21
+ * (master) as well as 0xA0 and 0xA1 (slave). When an interrupt request is
+ * handled, the PIC is notified such that it can continue to handle further
+ * interrupts.
  *
  * \author Anthony Mercer
  *
@@ -23,7 +28,7 @@
 #include "../drivers/screen.h"
 #include "idt.h"
 
-/* Routines reserved for CPU exceptions */
+/* Interrupt service routine definitions (implemented in interrupt.asm) */
 extern void isr0();
 extern void isr1();
 extern void isr2();
@@ -57,6 +62,42 @@ extern void isr29();
 extern void isr30();
 extern void isr31();
 
+/* Interrupt request definitions (implemented in interrupt.asm) */
+extern void irq0();
+extern void irq1();
+extern void irq2();
+extern void irq3();
+extern void irq4();
+extern void irq5();
+extern void irq6();
+extern void irq7();
+extern void irq8();
+extern void irq9();
+extern void irq10();
+extern void irq11();
+extern void irq12();
+extern void irq13();
+extern void irq14();
+extern void irq15();
+
+/* Define the new identifiers for the interrupt requests */
+#define IRQ0 32
+#define IRQ1 33
+#define IRQ2 34
+#define IRQ3 35
+#define IRQ4 36
+#define IRQ5 37
+#define IRQ6 38
+#define IRQ7 39
+#define IRQ8 40
+#define IRQ9 41
+#define IRQ10 42
+#define IRQ11 43
+#define IRQ12 44
+#define IRQ13 45
+#define IRQ14 46
+#define IRQ15 47
+
 /**
  * Define a struct to hold a number of registers.
  */
@@ -68,18 +109,36 @@ typedef struct {
   uint32 eip, cs, eflags, useresp, ss; /**< No direct access */
 } Registers;
 
+/* Function pointer definition for handling IRQs */
+typedef void (*ISR)(Registers);
+
 /**
- * \brief Sets up the IDT and its gates.
+ * \brief Sets up the IDT and its gates as well as remapping the PIC.
  * \param None.
  * \returns None.
  */
-void isr_install();
+void interrupt_install(void);
 
 /**
  * \brief Handles a given interrupt.
  * \param [in] regs Pass in a set of registers.
  * \returns None.
  */
-void isr_handler(Registers regs);
+void isr_handler(const Registers regs);
+
+/**
+ * \brief Handles a given interrupt request.
+ * \param [in] regs Pass in a set of registers.
+ * \returns None.
+ */
+void irq_handler(const Registers regs);
+
+/**
+ * \brief Installs a handler function to the index of functions.
+ * \param [in] n The index of handler functions to install.
+ * \param [in] handler The function to install.
+ * \returns None.
+ */
+void reg_interrupt_handler(const uint8 n, const ISR handler);
 
 #endif
