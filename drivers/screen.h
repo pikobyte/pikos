@@ -32,7 +32,7 @@
  * \param None.
  * \returns None.
  */
-void clear_screen();
+void clear_screen(void);
 
 /**
  * \brief Prints a string to a location on screen.

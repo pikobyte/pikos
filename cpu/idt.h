@@ -68,6 +68,6 @@ void set_idt_gate(const uint32 n, const uint32 loc);
  * \param None.
  * \returns None.
  */
-void set_idt();
+void set_idt(void);
 
 #endif

@@ -63,8 +63,8 @@ void print(const char *str) { print_at(str, -1, -1); }
  * \desc Clears the screen by looping over the screen buffer and replacing all
  * characters with a space.
 */
-void clear_screen() {
-  int32 i = 0;
+void clear_screen(void) {
+  uint32 i = 0;
 
   uint8 *screen = (uint8 *)VIDEO_ADDRESS;
   for (i = 0; i < MAX_X * MAX_Y; ++i) {

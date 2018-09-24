@@ -31,7 +31,7 @@ void set_idt_gate(const uint32 n, const uint32 loc) {
  * the number of entries multiplied by the size of those entries minus one. The
  * inline assembly utilises the load IDT command to load in our register.
  */
-void set_idt() {
+void set_idt(void) {
   idt_reg.base = (uint32)&idt;
   idt_reg.limit = IDT_ENTRIES * sizeof(IDT_Gate) - 1;
   __asm__ __volatile__("lidtl (%0)" : : "r"(&idt_reg));

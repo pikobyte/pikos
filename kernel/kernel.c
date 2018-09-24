@@ -27,7 +27,7 @@
  * \param None.
  * \return None.
  */
-void main() {
+void main(void) {
   clear_screen();
   print("PikOS");
   interrupt_install();
