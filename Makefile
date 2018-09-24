@@ -8,8 +8,8 @@
 
 CC = gcc
 GDB = gdb
-CFLAGS = -m32 -g -nostdlib -nostdinc -O0 -Wall -Wpedantic -Werror \
-		 -ansi
+CFLAGS = -m32 -g -O0 -Wall -Wpedantic -Werror -ansi -nostdlib -nostdinc \
+				 -nostartfiles -nodefaultlibs -fno-builtin -fno-stack-protector
 
 C_SOURCES = $(wildcard common/*.c kernel/*.c drivers/*.c cpu/*.c)
 HEADERS = $(wildcard common/*.h kernel/*.h drivers/*.h cpu/*.h)
