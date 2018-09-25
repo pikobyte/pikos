@@ -3,7 +3,10 @@
 ; Simply defines the calling point of main in the kernel.
 ;
 
+global _start
 [bits 32]
-[extern main]
-call main
-jmp $
+
+_start:
+  [extern pikos_main]
+  call pikos_main
+  jmp $
