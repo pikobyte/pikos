@@ -4,7 +4,7 @@
 
 /**
  * \file screen.h
- * \brief Screen function implementation.
+ * \brief Screen function definition.
  *
  * \author Anthony Mercer
  *
