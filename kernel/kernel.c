@@ -11,9 +11,9 @@
  */
 
 #include "kernel.h"
+#include "../common/color.h"
 #include "../cpu/isr.h"
 #include "../drivers/screen.h"
-#include "../common/color.h"
 
 /**
  *
@@ -32,14 +32,20 @@ void pikos_main(void) {
 
 /**
  * \desc Reads in the current line buffer and simply outputs it onto the next
- * line. If QUIT is input, halt the CPU.
+ * line.
  */
 void user_input(const char *input) {
   if (strcmp(input, "QUIT") == 0) {
     print("CPU halted!\n");
     __asm__ __volatile__("hlt");
+  } else if (strcmp(input, "CLEAR") == 0) {
+    clear_screen();
+    print("\n > ");
+  } else if (strcmp(input, "RESTART") == 0) {
+    splash_screen();
+  } else {
+    print("   ");
+    print(input);
+    print("\n > ");
   }
-  print("   ");
-  print(input);
-  print("\n > ");
 }
