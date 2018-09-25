@@ -20,6 +20,7 @@ isr_common:
 	mov fs, ax
 	mov gs, ax
 	
+  cld                 ; Clear the direction flag
 	call isr_handler    ; Call the C ISR handling function
 	
 	pop eax             ; Restore the general purpose registers
@@ -44,6 +45,7 @@ irq_common:
 	  mov fs, ax
 	  mov gs, ax
 
+    cld               ; Clear the direction flag
     call irq_handler  ; Call the C ISQ handling function
 
     pop ebx           ; Restore the general purpose registers
