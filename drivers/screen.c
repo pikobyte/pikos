@@ -16,7 +16,7 @@
  * FUNCTION PROTOTYPES
  * ---------------------------------------------------------------------------*/
 static int32 print_char(const uint8 character, const int32 x, int32 y,
-                        uint8 attrib_byte);
+                        const uint8 fg, const uint8 bg);
 static int32 get_screen_offset(const int32 x, const int32 y);
 static int32 get_offset_x(const int32 offset);
 static int32 get_offset_y(const int32 offset);
@@ -33,7 +33,8 @@ static int32 handle_scrolling(int32 offset);
  * positions are negative, then the string is written to the cursor position.
  * Single character printing is relegated to the print_char() function.
  */
-void print_at(const char *str, int32 x, int32 y) {
+void print_at(const char *str, int32 x, int32 y, const uint8 fg,
+              const uint8 bg) {
   int32 i = 0;
   int32 offset = 0;
 
@@ -47,7 +48,7 @@ void print_at(const char *str, int32 x, int32 y) {
   }
 
   while (str[i] != 0) {
-    offset = print_char(str[i++], x, y, WHITE_ON_BLACK);
+    offset = print_char(str[i++], x, y, fg, bg);
     x = get_offset_x(offset);
     y = get_offset_y(offset);
   }
@@ -57,7 +58,15 @@ void print_at(const char *str, int32 x, int32 y) {
  * \desc Prints a given string at the cursor location. This function is a
  * wrapper to the print_at() function, passing in a negative position.
  */
-void print(const char *str) { print_at(str, -1, -1); }
+void print(const char *str) { print_at(str, -1, -1, GREY_LIGHT, BLACK); }
+
+/**
+ * \desc Prints a given colored string at the cursor location. This function is
+ * a wrapper to the print_at() function, passing in a negative position.
+ */
+void printc(const char *str, const uint8 fg, const uint8 bg) {
+  print_at(str, -1, -1, fg, bg);
+}
 
 /**
  * \desc Sets the cursor back by two positions and prints a space via the
@@ -67,7 +76,7 @@ void print_bs(void) {
   int32 offset = get_cursor_offset() - 2;
   uint32 x = get_offset_x(offset);
   uint32 y = get_offset_y(offset);
-  print_char(ASCII_BS, x, y, WHITE_ON_BLACK);
+  print_char(ASCII_BS, x, y, BLACK, BLACK);
 }
 
 /**
@@ -78,7 +87,7 @@ void print_tab(void) {
   int32 offset = get_cursor_offset();
   uint32 x = get_offset_x(offset);
   uint32 y = get_offset_y(offset);
-  print_char(ASCII_TAB, x, y, WHITE_ON_BLACK);
+  print_char(ASCII_TAB, x, y, BLACK, BLACK);
 }
 
 /**
@@ -90,7 +99,7 @@ void print_ln(void) {
   int32 offset = get_cursor_offset();
   uint32 x = get_offset_x(offset);
   uint32 y = get_offset_y(offset);
-  print_char(ASCII_LN, x, y, WHITE_ON_BLACK);
+  print_char(ASCII_LN, x, y, BLACK, BLACK);
 }
 
 /**
@@ -103,9 +112,36 @@ void clear_screen(void) {
   uint8 *screen = (uint8 *)VIDEO_ADDRESS;
   for (i = 0; i < MAX_X * MAX_Y; ++i) {
     screen[i * 2] = ' ';
-    screen[i * 2 + 1] = WHITE_ON_BLACK;
+    screen[i * 2 + 1] = COLOR(BLACK, BLACK);
   }
   set_cursor_offset(get_screen_offset(0, 0));
+}
+
+/**
+ * \desc Shows the PikOS splash screen whenever a shell is started or restarted.
+ */
+void splash_screen(void) {
+  clear_screen();
+  print_ln();
+
+  printc("          oo dP       MMP\"\"\"\"\"YMM MP\"\"\"\"\"\"`MM \n", WHITE,
+         BLACK);
+  printc("             88       M' .mmm. `M M  mmmmm..M", WHITE, BLACK);
+  print_ln();
+  printc(" 88d888b. dP 88  .dP  M  MMMMM  M M.      `YM", GREY_LIGHT, BLACK);
+  print_ln();
+  printc(" 88'  `88 88 88888\"   M  MMMMM  M MMMMMMM.  M", GREY_LIGHT, BLACK);
+  print_ln();
+  printc(" 88.  .88 88 88  `8b. M. `MMM' .M M. .MMM'  M", GREY_LIGHT, BLACK);
+  print_ln();
+  printc(" 88Y888P' dP dP   `YP MMb     dMM Mb.     .dM", GREY_DARK, BLACK);
+  print_ln();
+  printc(" 88                   MMMMMMMMMMM MMMMMMMMMMM", GREY_DARK, BLACK);
+  print_ln();
+  printc(" dP ", GREY_DARK, BLACK);
+  printc("\t  v0.0.1", GREY_DARK, BLACK);
+
+  print("\n\n > ");
 }
 
 /*------------------------------------------------------------------------------
@@ -132,13 +168,10 @@ void clear_screen(void) {
  * \returns Position of the cursor/position in video memory.
  */
 static int32 print_char(const uint8 character, const int32 x, int32 y,
-                        uint8 attr) {
+                        const uint8 fg, const uint8 bg) {
   int32 offset = 0;
   uint8 *vid_mem = (uint8 *)VIDEO_ADDRESS;
-
-  if (!attr) {
-    attr = WHITE_ON_BLACK;
-  }
+  uint8 attr = COLOR(fg, bg);
 
   if (x >= MAX_X || y >= MAX_Y) {
     return get_screen_offset(x, y);

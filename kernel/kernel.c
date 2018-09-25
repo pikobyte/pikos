@@ -13,6 +13,7 @@
 #include "kernel.h"
 #include "../cpu/isr.h"
 #include "../drivers/screen.h"
+#include "../common/color.h"
 
 /**
  *
@@ -24,11 +25,9 @@
  * \return None.
  */
 void pikos_main(void) {
-  clear_screen();
-  print("PikOS");
+  splash_screen();
   isr_install();
   irq_install();
-  print("\n\n> ");
 }
 
 /**
@@ -40,7 +39,7 @@ void user_input(const char *input) {
     print("CPU halted!\n");
     __asm__ __volatile__("hlt");
   }
-  print("  ");
+  print("   ");
   print(input);
-  print("\n> ");
+  print("\n > ");
 }
