@@ -44,8 +44,8 @@
 #ifndef TIMER_H
 #define TIMER_H
 
-#include "../common/definitions.h"
-#include "../common/utils.h"
+#include "../common/types.h"
+#include "../common/string.h"
 #include "../drivers/screen.h"
 #include "isr.h"
 

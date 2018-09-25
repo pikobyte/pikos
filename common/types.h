@@ -17,6 +17,10 @@
 #ifndef DEFINITIONS_H
 #define DEFINITIONS_H
 
+/* Works with nostdlib but not with nostdinc.
+ * Might be safer having the types? */
+#include <stdint.h>
+
 typedef unsigned char uint8;
 typedef signed char int8;
 typedef unsigned short uint16;
@@ -24,9 +28,13 @@ typedef signed short int16;
 typedef unsigned int uint32;
 typedef signed int int32;
 
+/* Macros to get the lower/upper bits from int types */
 #define lo8(addr) (uint8)((addr)&0xFF)
 #define hi8(addr) (uint8)(((addr) >> 8) & 0xFF)
 #define lo16(addr) (uint16)((addr)&0xFFFF)
 #define hi16(addr) (uint16)(((addr) >> 16) & 0xFFFF)
+
+/* Used to avoid unused parameter compiler warning */
+#define UNUSED(x) (void)(x)
 
 #endif

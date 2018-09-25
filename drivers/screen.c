@@ -291,7 +291,7 @@ static void set_cursor_offset(int32 offset) {
  * \brief Scrolls the screen if required.
  *
  * \desc The function checks if the current position is within the screen, and
- * returns it if it is. If not, each row is moved backward using mem_copy() and
+ * returns it if it is. If not, each row is moved backward using memcpy() and
  * utilising the fact that we know where the video memory is and how far into
  * it we are. The last line is removed and the cursor position is set back a
  * row and is returned.
@@ -309,8 +309,8 @@ static int32 handle_scrolling(int32 offset) {
   }
 
   for (i = 1; i < MAX_Y; ++i) {
-    mem_copy((char *)(get_screen_offset(0, i)) + VIDEO_ADDRESS,
-             (char *)(get_screen_offset(0, i - 1)) + VIDEO_ADDRESS, MAX_X * 2);
+    memcpy((char *)(get_screen_offset(0, i)) + VIDEO_ADDRESS,
+           (char *)(get_screen_offset(0, i - 1)) + VIDEO_ADDRESS, MAX_X * 2);
   }
 
   for (i = 0; i < MAX_X * 2; ++i) {

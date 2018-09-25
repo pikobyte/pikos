@@ -35,7 +35,7 @@
 #ifndef PORTS_H
 #define PORTS_H
 
-#include "../common/definitions.h"
+#include "../common/types.h"
 
 /**
  * \brief Reads a byte from a given port.

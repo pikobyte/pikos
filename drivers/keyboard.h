@@ -20,11 +20,11 @@
 #ifndef KEYBOARD_H
 #define KEYBOARD_H
 
-#include "../kernel/kernel.h"
-#include "../common/definitions.h"
+#include "../common/types.h"
 #include "../cpu/isr.h"
+#include "../cpu/ports.h"
 #include "../drivers/screen.h"
-#include "ports.h"
+#include "../kernel/kernel.h"
 
 /** \typdef
  * \brief Defines the keyboard data port from which the received scancode can be

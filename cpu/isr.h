@@ -23,8 +23,8 @@
 #ifndef ISR_H
 #define ISR_H
 
-#include "../common/definitions.h"
-#include "../common/utils.h"
+#include "../common/types.h"
+#include "../common/string.h"
 #include "../drivers/keyboard.h"
 #include "../drivers/screen.h"
 #include "idt.h"

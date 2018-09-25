@@ -19,7 +19,7 @@
 #ifndef IDT_H
 #define IDT_H
 
-#include "../common/definitions.h"
+#include "../common/types.h"
 
 /* Kernel code segment selector */
 #define KERNEL_CS 0x08

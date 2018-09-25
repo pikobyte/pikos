@@ -13,10 +13,11 @@
 #ifndef SCREEN_H
 #define SCREEN_H
 
-#include "../common/definitions.h"
 #include "../common/color.h"
-#include "../common/utils.h"
-#include "../drivers/ports.h"
+#include "../common/types.h"
+#include "../common/string.h"
+#include "../common/memory.h"
+#include "../cpu/ports.h"
 
 /* Video memory and screen buffer constants */
 #define VIDEO_ADDRESS 0xB8000
