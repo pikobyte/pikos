@@ -12,24 +12,91 @@
 
 #include "keyboard.h"
 
-/* Function prototypes */
-void print_letter(const uint8 scancode);
+/* Maximum number of scancodes */
+#define SC_MAX 57
+
+/* Common escape sequence scancodes */
+#define BACKSPACE 0x0E
+#define TAB 0x0F
+#define ENTER 0x1C
+#define LSHIFT 0x2A
+#define LCTRL 0x1D
+#define LALT 0x38
+#define CAPS_LOCK 0x3A
+
+#define MAX_BUFFER_LEN 1024
+static char key_buffer[MAX_BUFFER_LEN];
+
+const char *sc_name[] = {
+    "ERROR",     "Esc",     "1", "2", "3", "4",      "5",
+    "6",         "7",       "8", "9", "0", "-",      "=",
+    "Backspace", "Tab",     "Q", "W", "E", "R",      "T",
+    "Y",         "U",       "I", "O", "P", "[",      "]",
+    "Enter",     "Lctrl",   "A", "S", "D", "F",      "G",
+    "H",         "J",       "K", "L", ";", "'",      "`",
+    "LShift",    "\\",      "Z", "X", "C", "V",      "B",
+    "N",         "M",       ",", ".", "/", "RShift", "Keypad *",
+    "LAlt",      "Spacebar"};
+
+const char sc_str[] = {'?',  '?', '1', '2',  '3', '4',  '5', '6', '7', '8',
+                       '9',  '0', '-', '=',  '?', '\t', 'Q', 'W', 'E', 'R',
+                       'T',  'Y', 'U', 'I',  'O', 'P',  '[', ']', '?', '?',
+                       'A',  'S', 'D', 'F',  'G', 'H',  'J', 'K', 'L', ';',
+                       '\'', '`', '?', '\\', 'Z', 'X',  'C', 'V', 'B', 'N',
+                       'M',  ',', '.', '/',  '?', '?',  '?', ' '};
 
 /**
- * \brief Prints the character recieved from the keyboard.
+ * \brief Prints the character received from the keyboard.
  *
  * The keyboard has many scancodes, only some of which we consider here. For
  * each of these cases, this function prints either the ASCII representation of
- * the scancode or some other message. Key releases are the scancode + 0x80.
+ * the scancode or some other message. Key releases are the scancode + 0x80. We
+ * do not allow the buffer to be less than 1 when backspacing as the prompt
+ * symbol should remain. Similarly, the buffer has a maximum length and no input
+ * can be entered longer than that length. The TAB key enters up to the number
+ * of configured spaces provided there is room in the buffer.
  *
  * \params [in] scancode The number of the keyboard key that is pressed.
  * \returns None.
  */
 static void keyboard_callback(Registers regs) {
   uint8 scancode = port_byte_in(KEY_DATA_PORT);
-  char *sc_str = {0};
-  itostr(scancode, sc_str);
-  print_letter(scancode);
+
+  if (scancode > SC_MAX) {
+    return;
+  }
+
+  if (scancode == BACKSPACE) {
+    if (strlen(key_buffer) > 0) {
+      strbs(key_buffer);
+      print_bs();
+    }
+  } else if (scancode == TAB) {
+    if (strlen(key_buffer) < MAX_BUFFER_LEN - 1) {
+      uint32 i = 0;
+      for (i = 0; i < TAB_SIZE; ++i) {
+        if (strlen(key_buffer) >= MAX_BUFFER_LEN - 1) {
+          break;
+        }
+        strapp(key_buffer, ' ');
+      }
+      print_tab();
+    }
+  } else if (scancode == ENTER) {
+    print_ln();
+    user_input(key_buffer); /* kernel-controlled function */
+    key_buffer[0] = '\0';
+  } else {
+    if (strlen(key_buffer) < MAX_BUFFER_LEN - 1) {
+      char letter = sc_str[(uint8)scancode];
+      char str[2];
+      str[0] = letter;
+      str[1] = '\0';
+      strapp(key_buffer, letter);
+      print(str);
+    }
+  }
+
   UNUSED(regs);
 }
 
@@ -38,202 +105,3 @@ static void keyboard_callback(Registers regs) {
  * (IRQ1).
  */
 void init_keyboard(void) { reg_interrupt_handler(IRQ1, keyboard_callback); }
-
-/**
- * \brief Prints an ASCII message based on scancode.
- *
- * The keyboard has many scancodes, only some of which we consider here. For
- * each of these cases, this function prints either the ASCII representation of
- * the scancode or some other message. Key releases are the scancode + 0x80.
- *
- * \params [in] scancode The number of the keyboard key that is pressed.
- * \returns None.
- */
-void print_letter(const uint8 scancode) {
-  switch (scancode) {
-  case 0x0:
-    print("ERROR");
-    break;
-  case 0x1:
-    print("ESC");
-    break;
-  case 0x2:
-    print("1");
-    break;
-  case 0x3:
-    print("2");
-    break;
-  case 0x4:
-    print("3");
-    break;
-  case 0x5:
-    print("4");
-    break;
-  case 0x6:
-    print("5");
-    break;
-  case 0x7:
-    print("6");
-    break;
-  case 0x8:
-    print("7");
-    break;
-  case 0x9:
-    print("8");
-    break;
-  case 0x0A:
-    print("9");
-    break;
-  case 0x0B:
-    print("0");
-    break;
-  case 0x0C:
-    print("-");
-    break;
-  case 0x0D:
-    print("+");
-    break;
-  case 0x0E:
-    print("Backspace");
-    break;
-  case 0x0F:
-    print("Tab");
-    break;
-  case 0x10:
-    print("Q");
-    break;
-  case 0x11:
-    print("W");
-    break;
-  case 0x12:
-    print("E");
-    break;
-  case 0x13:
-    print("R");
-    break;
-  case 0x14:
-    print("T");
-    break;
-  case 0x15:
-    print("Y");
-    break;
-  case 0x16:
-    print("U");
-    break;
-  case 0x17:
-    print("I");
-    break;
-  case 0x18:
-    print("O");
-    break;
-  case 0x19:
-    print("P");
-    break;
-  case 0x1A:
-    print("[");
-    break;
-  case 0x1B:
-    print("]");
-    break;
-  case 0x1C:
-    print("ENTER");
-    break;
-  case 0x1D:
-    print("LCtrl");
-    break;
-  case 0x1E:
-    print("A");
-    break;
-  case 0x1F:
-    print("S");
-    break;
-  case 0x20:
-    print("D");
-    break;
-  case 0x21:
-    print("F");
-    break;
-  case 0x22:
-    print("G");
-    break;
-  case 0x23:
-    print("H");
-    break;
-  case 0x24:
-    print("J");
-    break;
-  case 0x25:
-    print("K");
-    break;
-  case 0x26:
-    print("L");
-    break;
-  case 0x27:
-    print(";");
-    break;
-  case 0x28:
-    print("'");
-    break;
-  case 0x29:
-    print("`");
-    break;
-  case 0x2A:
-    print("LShift");
-    break;
-  case 0x2B:
-    print("\\");
-    break;
-  case 0x2C:
-    print("Z");
-    break;
-  case 0x2D:
-    print("X");
-    break;
-  case 0x2E:
-    print("C");
-    break;
-  case 0x2F:
-    print("V");
-    break;
-  case 0x30:
-    print("B");
-    break;
-  case 0x31:
-    print("N");
-    break;
-  case 0x32:
-    print("M");
-    break;
-  case 0x33:
-    print(",");
-    break;
-  case 0x34:
-    print(".");
-    break;
-  case 0x35:
-    print("/");
-    break;
-  case 0x36:
-    print("Rshift");
-    break;
-  case 0x37:
-    print("Keypad *");
-    break;
-  case 0x38:
-    print("LAlt");
-    break;
-  case 0x39:
-    print(" ");
-    break;
-  default:
-    if (scancode <= 0x7f) {
-      print("Unknown key press!");
-    } else if (scancode <= 0x39 + 0x80) {
-      /* Handle key release */
-      print("key up ");
-      print_letter(scancode - 0x80);
-    } else
-      print("Unknown key release!");
-    break;
-  }
-}

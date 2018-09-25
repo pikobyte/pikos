@@ -6,29 +6,41 @@
  * \file kernel.c
  * \brief Contains the main entry point for the PikOS kernel.
  *
- * The main function is the first call after control has been given to the
- * kernel from the boot sector. From here, the operating system runs in C with
- * some assembly functionality.
- *
  * \author Anthony Mercer
- * 
+ *
  */
 
-#include "../drivers/screen.h"
+#include "kernel.h"
 #include "../cpu/isr.h"
+#include "../drivers/screen.h"
 
 /**
  *
  * \brief The main entry point for the kernel.
  *
- * Currently clears the screen, prints the operating system name. and sets up
- * interrupt handling. 
+ * Clears the screen, initialises interrupts and starts the shell.
  *
  * \param None.
  * \return None.
  */
-void main(void) {
+void pikos_main(void) {
   clear_screen();
   print("PikOS");
-  interrupt_install();
+  isr_install();
+  irq_install();
+  print("\n\n> ");
+}
+
+/**
+ * \desc Reads in the current line buffer and simply outputs it onto the next
+ * line. If QUIT is input, halt the CPU.
+ */
+void user_input(const char *input) {
+  if (strcmp(input, "QUIT") == 0) {
+    print("CPU halted!\n");
+    __asm__ __volatile__("hlt");
+  }
+  print("  ");
+  print(input);
+  print("\n> ");
 }

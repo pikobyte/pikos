@@ -20,6 +20,7 @@
 #ifndef KEYBOARD_H
 #define KEYBOARD_H
 
+#include "../kernel/kernel.h"
 #include "../common/definitions.h"
 #include "../cpu/isr.h"
 #include "../drivers/screen.h"

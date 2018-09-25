@@ -56,13 +56,47 @@ void print_at(const char *str, int32 x, int32 y) {
 /**
  * \desc Prints a given string at the cursor location. This function is a
  * wrapper to the print_at() function, passing in a negative position.
-*/
+ */
 void print(const char *str) { print_at(str, -1, -1); }
+
+/**
+ * \desc Sets the cursor back by two positions and prints a space via the
+ * print_char() function. This mimics a destructive backspace (ASCII 0x08).
+ */
+void print_bs(void) {
+  int32 offset = get_cursor_offset() - 2;
+  uint32 x = get_offset_x(offset);
+  uint32 y = get_offset_y(offset);
+  print_char(ASCII_BS, x, y, WHITE_ON_BLACK);
+}
+
+/**
+ * \desc Gets the current cursor position and prints the number of spaces a tab
+ * (ASCII 0x09) is configured to using the print_char() function.
+ */
+void print_tab(void) {
+  int32 offset = get_cursor_offset();
+  uint32 x = get_offset_x(offset);
+  uint32 y = get_offset_y(offset);
+  print_char(ASCII_TAB, x, y, WHITE_ON_BLACK);
+}
+
+/**
+ * \desc Gets the current cursor position and calls print_char() which
+ * consequently increments the row by 1. This mimics a newline/feed line
+ * (ASCII 0x0A).
+ * */
+void print_ln(void) {
+  int32 offset = get_cursor_offset();
+  uint32 x = get_offset_x(offset);
+  uint32 y = get_offset_y(offset);
+  print_char(ASCII_LN, x, y, WHITE_ON_BLACK);
+}
 
 /**
  * \desc Clears the screen by looping over the screen buffer and replacing all
  * characters with a space.
-*/
+ */
 void clear_screen(void) {
   uint32 i = 0;
 
@@ -80,7 +114,7 @@ void clear_screen(void) {
 
 /**
  * \brief Prints a single character to the screen at some location
- * 
+ *
  * \desc A provided character is printed to the screen at the given position
  * provided this position lies within the screen buffer, defined by MAX_X
  * and MAX_Y. If the position is negative, the character is printed at
@@ -88,13 +122,13 @@ void clear_screen(void) {
  * character is not an escape sequence, the video memory/cursor position
  * offset is increased. Scrolling of the screen is handled through the
  * handle_scrolling() function.
- * 
+ *
  * \param [in] character The character to be printed.
  * \param [in] x The x-position of the character.
  * \param [in] y The y-position of the character.
  * \param [in] attr The color attribute of the character, default to black
  * on white.
- * 
+ *
  * \returns Position of the cursor/position in video memory.
  */
 static int32 print_char(const uint8 character, const int32 x, int32 y,
@@ -116,16 +150,24 @@ static int32 print_char(const uint8 character, const int32 x, int32 y,
     offset = get_cursor_offset();
   }
 
-  if (character == '\n') {
+  if (character == ASCII_LN) {
     y = get_offset_y(offset);
     offset = get_screen_offset(0, y + 1);
+  } else if (character == ASCII_BS) {
+    vid_mem[offset] = ' ';
+    vid_mem[offset + 1] = attr;
+  } else if (character == ASCII_TAB) {
+    uint32 i = 0;
+    for (i = 0; i < TAB_SIZE; ++i) {
+      vid_mem[offset] = ' ';
+      vid_mem[offset + 1] = attr;
+      offset += 2;
+    }
   } else {
     vid_mem[offset] = character;
     vid_mem[offset + 1] = attr;
     offset += 2;
   }
-
-  /* TODO: Handle tab character. */
 
   offset = handle_scrolling(offset);
 
@@ -135,14 +177,14 @@ static int32 print_char(const uint8 character, const int32 x, int32 y,
 
 /**
  * \brief Gets the current position in video memory.
- * 
+ *
  * \desc Given a position on the screen, this function returns the number of
  * bytes into the video memory. The multiplication by 2 exists as characters are
  * 2 bytes long.
- * 
+ *
  * \param [in] x The desired x-position.
  * \param [in] y The desired y-position
- * 
+ *
  * \returns The corresponding position in video memory.
  */
 static int32 get_screen_offset(const int32 x, const int32 y) {
@@ -167,20 +209,18 @@ static int32 get_offset_x(const int32 offset) {
  *
  * \returns The corresponding screen y.
  */
-static int32 get_offset_y(const int32 offset) {
-  return offset / (2 * MAX_X);
-}
+static int32 get_offset_y(const int32 offset) { return offset / (2 * MAX_X); }
 
 /**
  * \brief Gets the cursor position via the video port.
- * 
+ *
  * \desc The current position of the cursor can be retrieved through querying
  * the video port. The data 14 and 15 access the low and high 8-bits of the
- * position respectively, which is consequently read in. The two bytes are 
+ * position respectively, which is consequently read in. The two bytes are
  * concatenated into a single int and returned in character units.
- * 
+ *
  * \param None.
- * 
+ *
  * \returns The current cursor position.
  */
 static int32 get_cursor_offset() {
@@ -216,11 +256,11 @@ static void set_cursor_offset(int32 offset) {
 
 /**
  * \brief Scrolls the screen if required.
- * 
+ *
  * \desc The function checks if the current position is within the screen, and
  * returns it if it is. If not, each row is moved backward using mem_copy() and
  * utilising the fact that we know where the video memory is and how far into
- * it we are. The last line is removed and the cursor position is set back a 
+ * it we are. The last line is removed and the cursor position is set back a
  * row and is returned.
  *
  * \param [in] offset The current position in video memory.
@@ -237,8 +277,7 @@ static int32 handle_scrolling(int32 offset) {
 
   for (i = 1; i < MAX_Y; ++i) {
     mem_copy((char *)(get_screen_offset(0, i)) + VIDEO_ADDRESS,
-             (char *)(get_screen_offset(0, i - 1)) + VIDEO_ADDRESS,
-             MAX_X * 2);
+             (char *)(get_screen_offset(0, i - 1)) + VIDEO_ADDRESS, MAX_X * 2);
   }
 
   for (i = 0; i < MAX_X * 2; ++i) {

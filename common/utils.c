@@ -76,7 +76,7 @@ void strrev(char *str) {
 /**
  * \desc Loops through the characters within a string, ending when the null
  * terminator is found. For every valid character, the output result is
- * incremented.
+ * incremented. The null terminator is not included in the count.
  */
 uint32 strlen(const char *str) {
   uint32 i = 0;
@@ -84,4 +84,52 @@ uint32 strlen(const char *str) {
     ++i;
   }
   return i;
+}
+
+/**
+ * \desc Sets the null terminator of a string str to a passed in character c.
+ * The null terminator is then put at the original string length + 1.
+ */
+void strapp(char *str, const char n) {
+  const uint32 len = strlen(str);
+  str[len] = n;
+  str[len + 1] = '\0';
+}
+
+/**
+ * \desc Loops through the characters in string to be concatenated (s2) and
+ * appends each character to the modified string (s1).
+ */
+void strcat(char *s1, const char *s2) {
+  uint32 i = 0;
+  const uint32 len2 = strlen(s2);
+
+  for (i = 0; i < len2; ++i) {
+    strapp(s1, s2[i]);
+  }
+}
+
+/**
+ * \desc Finds the length of a string and sets its last valid character to the
+ * null terminator.
+ */
+void strbs(char *s) {
+  const uint32 len = strlen(s);
+  s[len - 1] = '\0';
+}
+
+/**
+ * \desc Loops whenever the current character of each string is equal. If the
+ * null terminator is reached for each, then the strings are equal and zero is
+ * returned. Otherwise return the difference between the characters that differ:
+ * negative when str1 < str2 and positive when str1 > str2.
+ */
+int8 strcmp(const char *str1, const char *str2) {
+  uint32 i = 0;
+  for (i = 0; str1[i] == str2[i]; i++) {
+    if (str1[i] == '\0') {
+      return 0;
+    }
+  }
+  return str1[i] - str2[i];
 }

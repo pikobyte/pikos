@@ -22,6 +22,12 @@
 #define MAX_X 80
 #define MAX_Y 25
 #define WHITE_ON_BLACK 0x0f
+#define TAB_SIZE 4
+
+/* ASCII escape codes */
+#define ASCII_BS 0x08
+#define ASCII_TAB 0x09
+#define ASCII_LN 0x0A
 
 /* Screen device I/O ports */
 #define REG_SCREEN_CTRL 0x3d4
@@ -49,5 +55,26 @@ void print_at(const char *str, int32 x, int32 y);
  * \returns None.
  */
 void print(const char *str);
+
+/**
+ * \brief Moves cursor back and prints a space.
+ * \param None.
+ * \returns None.
+ */
+void print_bs(void);
+
+/**
+ * \brief Prints the number of spaces a tab is configured to.
+ * \param None.
+ * \returns None.
+ */
+void print_tab(void);
+
+/**
+ * \brief Prints a new line.
+ * \param None.
+ * \returns None.
+ */
+void print_ln(void);
 
 #endif
