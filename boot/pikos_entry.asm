@@ -7,6 +7,6 @@ global _start
 [bits 32]
 
 _start:
-  [extern pikos_main]
-  call pikos_main
-  jmp $
+    [extern pikos_main]
+    call  pikos_main
+    jmp   $
