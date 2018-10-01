@@ -44,6 +44,44 @@ void itostr(int32 n, char *str) {
 }
 
 /**
+ * \desc Receives an signed integer and converts it to a string of ASCII
+ * characters including minus symbol. The output is written to memory starting
+ * at the received pointer and ends with null termination. The string is in
+ * reverse order to must be flipped. Firstly the sign of n is found, and if is
+ * negative, makes n positive. The sign is saved for later to append the minus
+ * symbol. The remainder of n and 10 is the number required, and is so added to
+ * ASCII 0. This occurs whilst the current character is numeric.
+ */
+void xtostr(int32 n, char *str) {
+  uint32 tmp = 0;
+  uint32 i = 0;
+  char zeros = 0;
+  strapp(str, '0');
+  strapp(str, 'x');
+
+  for (i = 28; i > 0; i -= 4) {
+    tmp = (n >> i) & 0xF;
+    if (tmp == 0 && zeros == 0) {
+      continue;
+    }
+
+    zeros = 1;
+    if (tmp >= 0xA) {
+      strapp(str, tmp - 0xA + 'a');
+    } else {
+      strapp(str, tmp + '0');
+    }
+  }
+
+  tmp = n & 0xF;
+  if (tmp >= 0xA) {
+    strapp(str, tmp - 0xA + 'a');
+  } else {
+    strapp(str, tmp + '0');
+  }
+}
+
+/**
  * /desc Iterate through the string from beginning to end and end to beginning
  * simutaneously swapping str[0] with str[n], str[1] with str[n - 1] etc. Note
  * that we do not consider the null termination character: we most certainly do

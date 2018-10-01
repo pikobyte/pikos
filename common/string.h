@@ -7,7 +7,7 @@
  * \brief String function declarations.
  *
  * ...
- * 
+ *
  * \author Anthony Mercer
  *
  */
@@ -24,6 +24,14 @@
  * \returns None.
  */
 void itostr(int32 n, char *str);
+
+/**
+ * \brief Converts an hexidecimal value to ASCII representation.
+ * \param [in] n The number to be converted.
+ * \param [out] str The address in memory to start modification.
+ * \returns None.
+ */
+void xtostr(int32 n, char *str);
 
 /**
  * \brief Reverses a whole string.
