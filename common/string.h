@@ -79,4 +79,11 @@ void strbs(char *str);
  */
 int8 strcmp(const char *s1, const char *s2);
 
+/**
+ * \brief Clears a string.
+ * \param [out] str String to clear.
+ * \returns None.
+ */
+void strclr(char *str);
+
 #endif

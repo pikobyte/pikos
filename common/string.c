@@ -50,7 +50,8 @@ void itostr(int32 n, char *str) {
  * reverse order to must be flipped. Firstly the sign of n is found, and if is
  * negative, makes n positive. The sign is saved for later to append the minus
  * symbol. The remainder of n and 10 is the number required, and is so added to
- * ASCII 0. This occurs whilst the current character is numeric.
+ * ASCII 0. This occurs whilst the current character is numeric. The leading
+ * zeroes of the hex value are not output.
  */
 void xtostr(int32 n, char *str) {
   uint32 tmp = 0;
@@ -58,6 +59,9 @@ void xtostr(int32 n, char *str) {
   char zeros = 0;
   strapp(str, '0');
   strapp(str, 'x');
+  if (n < 0x10) {
+    strapp(str, '0');
+  }
 
   for (i = 28; i > 0; i -= 4) {
     tmp = (n >> i) & 0xF;
@@ -155,4 +159,12 @@ int8 strcmp(const char *str1, const char *str2) {
     }
   }
   return str1[i] - str2[i];
+}
+
+/**
+ * \desc Takes a string as input and sets its first character to the null
+ * terminator.
+ */
+void strclr(char *str) {
+  str[0] = '\0';
 }
