@@ -50,11 +50,6 @@ typedef struct {
   uint32 base;  /**< Memory address */
 } __attribute__((packed)) IDT_Register;
 
-/* Define the table itself */
-#define IDT_ENTRIES 256
-IDT_Gate idt[IDT_ENTRIES];
-IDT_Register idt_reg;
-
 /**
  * \brief Sets an IDT gate to given location with fixed flags.
  * \param [in] n The records to set.

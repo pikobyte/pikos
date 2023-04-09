@@ -8,8 +8,8 @@
 
 CC = gcc
 GDB = gdb
-CFLAGS = -m32 -g -O0 -Wall -Wpedantic -Werror -ansi -nostdlib -nostdinc \
-				 -nostartfiles -nodefaultlibs -fno-builtin -fno-stack-protector
+CFLAGS = -m32 -std=c2x -g -O0 -Wall -Wpedantic -Werror -nostdlib -nostdinc \
+	     -nostartfiles -nodefaultlibs -fno-builtin -fno-stack-protector -fno-pie
 
 C_SOURCES = $(wildcard common/*.c kernel/*.c drivers/*.c cpu/*.c)
 HEADERS = $(wildcard common/*.h kernel/*.h drivers/*.h cpu/*.h)
@@ -25,10 +25,12 @@ kernel.elf: boot/pikos_entry.o ${OBJ}
 	ld -m elf_i386 -o $@ -Ttext 0x1000 $^ 
 
 run: pikos.bin
-	qemu-system-x86_64 -fda pikos.bin
+	qemu-system-x86_64 -enable-kvm -cpu host \
+	-drive format=raw,file=pikos.bin,index=0,if=floppy
 
 debug: pikos.bin kernel.elf
-	qemu-system-x86_64 -s -fda pikos.bin &
+	qemu-system-x86_64 -enable-kvm -cpu host \
+	-drive format=raw,file=pikos.bin,index=0,if=floppy &
 	${GDB} -ex "target remote localhost:1234" -ex "symbol-file kernel.elf"
 
 %.o: %.c ${HEADERS}

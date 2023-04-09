@@ -96,8 +96,6 @@ static void keyboard_callback(Registers regs) {
       print(str);
     }
   }
-
-  UNUSED(regs);
 }
 
 /**

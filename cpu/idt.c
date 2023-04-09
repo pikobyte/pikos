@@ -12,6 +12,12 @@
 
 #include "idt.h"
 
+
+/* Define the table itself */
+#define IDT_ENTRIES 256
+IDT_Gate idt[IDT_ENTRIES];
+IDT_Register idt_reg;
+
 /**
  * \desc Sets n'th IDT gate values at locations of the corresponding assembly
  * functions. The selector is set to the kernel code segment of 0x08 and the
