@@ -75,6 +75,6 @@
  * \param [in] freq The frequency in Hertz to update the timer interrupt.
  * \returns None.
  */
-void init_timer(const uint32 freq);
+void init_timer(uint32 freq);
 
 #endif

@@ -33,7 +33,7 @@ static void timer_callback(const Registers* /*reg*/) {
  * calculates the frequency of the timer interrupt (based on the PIT clock) and
  * communicates this to the PIT I/O port.
  */
-void init_timer(const uint32 freq) {
+void init_timer(uint32 freq) {
   uint32 divisor = PIT_CLOCK / freq;
   uint8 low = lo8(divisor);
   uint8 high = hi8(divisor);

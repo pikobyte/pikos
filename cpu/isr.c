@@ -177,6 +177,6 @@ void irq_handler(const Registers* regs) {
  * indices will typically be IRQ0, IRQ1 etc. The installed handler function is
  * general, dealing with timing, keyboard input etc.
  */
-void reg_interrupt_handler(const uint8 n, const ISR handler) {
+void reg_interrupt_handler(uint8 n, const ISR handler) {
   interrupt_handlers[n] = handler;
 }

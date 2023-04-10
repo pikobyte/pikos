@@ -55,8 +55,7 @@ void splash_screen(void);
  * \param [in] y The y-position of the string.
  * \returns None.
  */
-void print_at(const char *str, int32 x, int32 y, const uint8 fg,
-              const uint8 bg);
+void print_at(const char *str, int32 x, int32 y, uint8 fg, uint8 bg);
 
 /**
  * \brief Prints a string at the cursor location.
@@ -72,7 +71,7 @@ void print(const char *str);
  * \param [in] bg The background color of the string.
  * \returns None.
  */
-void printc(const char *str, const uint8 fg, const uint8 bg);
+void printc(const char *str, uint8 fg, uint8 bg);
 
 /**
  * \brief Moves cursor back and prints a space.

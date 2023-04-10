@@ -18,7 +18,7 @@
  *  2. Input byte into AL.
  *  3. Put value in AL into result.
  */
-uint8 port_byte_in(const uint16 port) {
+uint8 port_byte_in(uint16 port) {
   uint8 result = 0;
   __asm__("in %%dx, %%al" : "=a"(result) : "d"(port));
   return result;
@@ -30,7 +30,7 @@ uint8 port_byte_in(const uint16 port) {
  *  2. Load EDX with given port.
  *  3. Output data to the port.
  */
-void port_byte_out(const uint16 port, const uint8 data) {
+void port_byte_out(uint16 port, uint8 data) {
   __asm__ volatile("out %%al, %%dx" : : "a"(data), "d"(port));
 }
 
@@ -40,7 +40,7 @@ void port_byte_out(const uint16 port, const uint8 data) {
  *  2. Input word into AL.
  *  3. Put value in AL into result.
  */
-uint16 port_word_in(const uint16 port) {
+uint16 port_word_in(uint16 port) {
   uint16 result = 0;
   __asm__("in %%dx , %%ax" : "=a"(result) : "d"(port));
   return result;
@@ -52,6 +52,6 @@ uint16 port_word_in(const uint16 port) {
  *  2. Load EDX with given port.
  *  3. Output data to the port.
  */
-void port_word_out(const uint16 port, const uint16 data) {
+void port_word_out(uint16 port, uint16 data) {
   __asm__ volatile("out %%ax , %%dx " : : "a"(data), "d"(port));
 }

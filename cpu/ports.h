@@ -42,7 +42,7 @@
  * \param [in] port The port to read a byte from.
  * \returns Byte provided by the given port.
  */
-uint8 port_byte_in(const uint16 port);
+uint8 port_byte_in(uint16 port);
 
 /**
  * \brief Writes a byte to a given port.
@@ -50,14 +50,14 @@ uint8 port_byte_in(const uint16 port);
  * \param [in] data The data to be written to the port.
  * \returns None.
  */
-void port_byte_out(const uint16 port, const uint8 data);
+void port_byte_out(uint16 port, uint8 data);
 
 /**
  * \brief Reads a word from a given port.
  * \param [in] port The port to read a word from.
  * \returns Word provided by the given port.
  */
-uint16 port_word_in(const uint16 port);
+uint16 port_word_in(uint16 port);
 
 /**
  * \brief Writes a word to a given port.
@@ -65,6 +65,6 @@ uint16 port_word_in(const uint16 port);
  * \param [in] data The data to be written to the port.
  * \returns None.
  */
-void port_word_out(const uint16 port, const uint16 data);
+void port_word_out(uint16 port, uint16 data);
 
 #endif

@@ -147,6 +147,6 @@ void irq_handler(const Registers* regs);
  * \param [in] handler The function to install.
  * \returns None.
  */
-void reg_interrupt_handler(const uint8 n, const ISR handler);
+void reg_interrupt_handler(uint8 n, const ISR handler);
 
 #endif

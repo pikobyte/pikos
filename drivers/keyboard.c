@@ -60,7 +60,7 @@ const char sc_str[] = {'?',  '?', '1', '2',  '3', '4',  '5', '6', '7', '8',
  * \returns None.
  */
 static void keyboard_callback(const Registers* regs) {
-  uint8 scancode = port_byte_in(KEY_DATA_PORT);
+  const uint8 scancode = port_byte_in(KEY_DATA_PORT);
 
   if (scancode > SC_MAX) {
     return;

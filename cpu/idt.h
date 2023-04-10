@@ -56,7 +56,7 @@ typedef struct {
  * \param [in] loc The location of the interrupt service routines.
  * \returns None
  */
-void set_idt_gate(const uint32 n, const uint32 loc);
+void set_idt_gate(uint32 n, uint32 loc);
 
 /**
  * \brief Sets the IDT address, size and loads it in.

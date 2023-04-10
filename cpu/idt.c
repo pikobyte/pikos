@@ -23,7 +23,7 @@ IDT_Register idt_reg;
  * flags are set such that that a 32-bit interrupt is present in ring 0, i.e the
  * kernel.
  */
-void set_idt_gate(const uint32 n, const uint32 loc) {
+void set_idt_gate(uint32 n, uint32 loc) {
   idt[n].low_offset = lo16(loc);
   idt[n].selector = KERNEL_CS;
   idt[n].zero = 0;

@@ -220,7 +220,7 @@ static int32 print_char(const uint8 character, const int32 x, int32 y,
  *
  * \returns The corresponding position in video memory.
  */
-static int32 get_screen_offset(const int32 x, const int32 y) {
+static int32 get_screen_offset(int32 x, int32 y) {
   return 2 * (y * MAX_X + x);
 }
 
@@ -231,7 +231,7 @@ static int32 get_screen_offset(const int32 x, const int32 y) {
  *
  * \returns The corresponding screen x.
  */
-static int32 get_offset_x(const int32 offset) {
+static int32 get_offset_x(int32 offset) {
   return (offset - (get_offset_y(offset) * 2 * MAX_X)) / 2;
 }
 
@@ -242,7 +242,7 @@ static int32 get_offset_x(const int32 offset) {
  *
  * \returns The corresponding screen y.
  */
-static int32 get_offset_y(const int32 offset) { return offset / (2 * MAX_X); }
+static int32 get_offset_y(int32 offset) { return offset / (2 * MAX_X); }
 
 /**
  * \brief Gets the cursor position via the video port.
