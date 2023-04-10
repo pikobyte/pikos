@@ -38,8 +38,8 @@ load_kernel:
     call  print_ln
 
     mov   bx, KERNEL_OFFSET  ; Read the kernel from the
-    mov   dh, 16             ; disc and store at the
-    mov   dl, [BOOT_DRIVE]   ; 16 sectors at 0x1000
+    mov   dh, 32             ; disc and store at the
+    mov   dl, [BOOT_DRIVE]   ; 32 sectors at 0x1000
 
     call  disk_load
     ret

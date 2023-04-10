@@ -25,14 +25,9 @@
  * \return None.
  */
 void pikos_main(void) {
-  //splash_screen();
+  splash_screen();
   isr_install();
   irq_install();
-  clear_screen();
-  print_at("Hello", 4, 4, WHITE, WHITE);
-
-  __asm__("int $2");
-  __asm__("int $3");
 }
 
 /**

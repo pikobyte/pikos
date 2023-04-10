@@ -88,8 +88,8 @@ static void keyboard_callback(const Registers* regs) {
     key_buffer[0] = '\0';
   } else {
     if (strlen(key_buffer) < MAX_BUFFER_LEN - 1) {
-      char letter = sc_str[(uint8)scancode];
-      char str[2];
+      char letter = sc_str[scancode];
+      char str[2] = {0};
       str[0] = letter;
       str[1] = '\0';
       strapp(key_buffer, letter);

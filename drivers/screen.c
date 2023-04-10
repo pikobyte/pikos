@@ -15,8 +15,7 @@
 /*------------------------------------------------------------------------------
  * FUNCTION PROTOTYPES
  * ---------------------------------------------------------------------------*/
-static int32 print_char(const uint8 character, const int32 x, int32 y,
-                        const uint8 fg, const uint8 bg);
+static int32 print_char(uint8 character, int32 x, int32 y, uint8 fg, uint8 bg);
 static int32 get_screen_offset(const int32 x, const int32 y);
 static int32 get_offset_x(const int32 offset);
 static int32 get_offset_y(const int32 offset);
@@ -35,7 +34,6 @@ static int32 handle_scrolling(int32 offset);
  */
 void print_at(const char *str, int32 x, int32 y, const uint8 fg,
               const uint8 bg) {
-  int32 i = 0;
   int32 offset = 0;
 
   /* Set cursor if x/y are negative */
@@ -47,8 +45,8 @@ void print_at(const char *str, int32 x, int32 y, const uint8 fg,
     y = get_offset_y(offset);
   }
 
-  while (str[i] != 0) {
-    offset = print_char(str[i++], x, y, fg, bg);
+  for (uint32 i = 0; i < strlen(str); ++i) {
+    offset = print_char(str[i], x, y, fg, bg);
     x = get_offset_x(offset);
     y = get_offset_y(offset);
   }
@@ -64,7 +62,7 @@ void print(const char *str) { print_at(str, -1, -1, GREY_LIGHT, BLACK); }
  * \desc Prints a given colored string at the cursor location. This function is
  * a wrapper to the print_at() function, passing in a negative position.
  */
-void printc(const char *str, const uint8 fg, const uint8 bg) {
+void printc(const char *str, uint8 fg, uint8 bg) {
   print_at(str, -1, -1, fg, bg);
 }
 
@@ -167,8 +165,8 @@ void splash_screen(void) {
  *
  * \returns Position of the cursor/position in video memory.
  */
-static int32 print_char(const uint8 character, const int32 x, int32 y,
-                        const uint8 fg, const uint8 bg) {
+static int32 print_char(uint8 character, int32 x, int32 y,
+                        uint8 fg, uint8 bg) {
   int32 offset = 0;
   uint8 *vid_mem = (uint8 *)VIDEO_ADDRESS;
   uint8 attr = COLOR(fg, bg);

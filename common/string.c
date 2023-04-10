@@ -110,6 +110,7 @@ uint32 strlen(const char *str) {
   while (str[i] != '\0') {
     ++i;
   }
+  
   return i;
 }
 
@@ -158,6 +159,7 @@ int8 strcmp(const char *str1, const char *str2) {
       return 0;
     }
   }
+
   return str1[i] - str2[i];
 }
 
