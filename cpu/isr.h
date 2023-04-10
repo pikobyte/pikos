@@ -104,15 +104,15 @@ extern void irq15();
  * Define a struct to hold a number of registers.
  */
 typedef struct {
-  uint32 ds; /**< Data segment selector. */
-  uint32 edi, esi, ebp, esp, ebx, edx, ecx,
-      eax;                             /**< General purpose registers. */
-  uint32 int_no, err_code;             /**< Interrupt number and error code */
-  uint32 eip, cs, eflags, useresp, ss; /**< No direct access */
+  uint32 ds;                          /**< Data segment selector. */
+  uint32 edi, esi, ebp, useless_esp,
+         ebx, edx, ecx, eax;          /**< General purpose registers. */
+  uint32 int_no, err_code;            /**< Interrupt number and error code */
+  uint32 eip, cs, eflags, esp, ss;    /**< No direct access */
 } Registers;
 
 /* Function pointer definition for handling IRQs */
-typedef void (*ISR)(Registers);
+typedef void (*ISR)(Registers const*);
 
 /**
  * \brief Sets up the IDT and its gates as well as remapping the PIC.
@@ -126,7 +126,7 @@ void isr_install(void);
  * \param [in] regs Pass in a set of registers.
  * \returns None.
  */
-void isr_handler(const Registers regs);
+void isr_handler(const Registers* regs);
 
 /** \brief Enables interuptions and sets them up.
  * \param None.
@@ -139,7 +139,7 @@ void irq_install(void);
  * \param [in] regs Pass in a set of registers.
  * \returns None.
  */
-void irq_handler(const Registers regs);
+void irq_handler(const Registers* regs);
 
 /**
  * \brief Installs a handler function to the index of functions.

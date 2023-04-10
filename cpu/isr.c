@@ -129,13 +129,13 @@ void isr_install(void) {
  * \desc An interrupt is identified through the Register interrupt number. We
  * can handle each interrupt therefore individually.
  */
-void isr_handler(const Registers regs) {
+void isr_handler(const Registers* regs) {
   char num[3] = {0};
   print("Received interrupt: ");
-  itostr(regs.int_no, num);
+  itostr(regs->int_no, num);
   print(num);
   print("\n");
-  print(exception_msgs[regs.int_no]);
+  print(exception_msgs[regs->int_no]);
   print("\n");
 }
 
@@ -144,7 +144,7 @@ void isr_handler(const Registers regs) {
  * the timer interrupt (IRQ0) and the keyboard (IRQ1) are initialised.
  */
 void irq_install(void) {
-  __asm__ __volatile__("sti");
+  __asm__ volatile("sti");
   init_timer(50);
   init_keyboard();
 }
@@ -159,14 +159,15 @@ void irq_install(void) {
  * absolute IRQ) then we must also inform the secondary slave PIC (I/O port
  * 0x0A).
  */
-void irq_handler(const Registers regs) {
-  if (regs.int_no >= 40) {
+void irq_handler(const Registers* regs) {
+  if (regs->int_no >= 40) {
     port_byte_out(0xA0, 0x20);
   }
+
   port_byte_out(0x20, 0x20);
 
-  if (interrupt_handlers[regs.int_no] != 0) {
-    ISR handler = interrupt_handlers[regs.int_no];
+  if (interrupt_handlers[regs->int_no] != 0) {
+    const ISR handler = interrupt_handlers[regs->int_no];
     handler(regs);
   }
 }

@@ -31,7 +31,7 @@ uint8 port_byte_in(const uint16 port) {
  *  3. Output data to the port.
  */
 void port_byte_out(const uint16 port, const uint8 data) {
-  __asm__("out %%al, %%dx" : : "a"(data), "d"(port));
+  __asm__ volatile("out %%al, %%dx" : : "a"(data), "d"(port));
 }
 
 /**
@@ -53,5 +53,5 @@ uint16 port_word_in(const uint16 port) {
  *  3. Output data to the port.
  */
 void port_word_out(const uint16 port, const uint16 data) {
-  __asm__("out %%ax , %%dx " : : "a"(data), "d"(port));
+  __asm__ volatile("out %%ax , %%dx " : : "a"(data), "d"(port));
 }

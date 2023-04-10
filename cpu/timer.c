@@ -24,7 +24,7 @@ static uint32 tick = 0;
  * prototype.
  * \returns None.
  */
-static void timer_callback(Registers /*reg*/) {
+static void timer_callback(const Registers* /*reg*/) {
   ++tick;
 }
 

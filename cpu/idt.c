@@ -12,10 +12,9 @@
 
 #include "idt.h"
 
-
 /* Define the table itself */
 #define IDT_ENTRIES 256
-IDT_Gate idt[IDT_ENTRIES];
+IDT_Gate idt[IDT_ENTRIES] = {0};
 IDT_Register idt_reg;
 
 /**
@@ -40,5 +39,5 @@ void set_idt_gate(const uint32 n, const uint32 loc) {
 void set_idt(void) {
   idt_reg.base = (uint32)&idt;
   idt_reg.limit = IDT_ENTRIES * sizeof(IDT_Gate) - 1;
-  __asm__ __volatile__("lidtl (%0)" : : "r"(&idt_reg));
+  __asm__ volatile("lidtl (%0)" : : "r"(&idt_reg));
 }

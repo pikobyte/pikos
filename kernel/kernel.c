@@ -25,9 +25,14 @@
  * \return None.
  */
 void pikos_main(void) {
-  splash_screen();
+  //splash_screen();
   isr_install();
   irq_install();
+  clear_screen();
+  print_at("Hello", 4, 4, WHITE, WHITE);
+
+  __asm__("int $2");
+  __asm__("int $3");
 }
 
 /**
@@ -37,7 +42,7 @@ void pikos_main(void) {
 void user_input(const char *input) {
   if (strcmp(input, "QUIT") == 0) {
     print("CPU halted!\n");
-    __asm__ __volatile__("hlt");
+    __asm__ volatile("hlt");
   } else if (strcmp(input, "CLEAR") == 0) {
     clear_screen();
     print("\n > ");

@@ -59,7 +59,7 @@ const char sc_str[] = {'?',  '?', '1', '2',  '3', '4',  '5', '6', '7', '8',
  * \params [in] scancode The number of the keyboard key that is pressed.
  * \returns None.
  */
-static void keyboard_callback(Registers regs) {
+static void keyboard_callback(const Registers* regs) {
   uint8 scancode = port_byte_in(KEY_DATA_PORT);
 
   if (scancode > SC_MAX) {
